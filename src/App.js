@@ -6,12 +6,12 @@ import Navbar1 from './components/Navbar1';
 
 import React, { useState } from 'react';
 import Alert from './components/Alert';
-import {
-  BrowserRouter,
-  Link,
-  Route,
-  Routes,
-} from "react-router-dom";
+// import {
+//   BrowserRouter,
+//   Link,
+//   Route,
+//   Routes,
+// } from "react-router-dom";
 
 function App() {
  
