@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 
 // Here importing state from react
-let wordLength = 0,characterLength=0;
+
 export default function TextForm(props) {
     
     
@@ -12,48 +12,33 @@ export default function TextForm(props) {
     // text = "kjbgwef"; // wrong way to set text
     // setText("jdgfwwe")// Correct way to set Text but at wrong place, will throw error.
 
-    // countWords is the function to count the words in a text
-    const countWords = () => {
-        let cnt = 0;
-        let ch_cnt =0;
-        if (text === "") {
-            wordLength = 0;
-        }
-        else {
-            for (let i in text) {
-                if (text[i] === " " && (text[(i - 1)] !== " ")) {
-                    cnt++;
-                }
-                if (text[i] !== " " ) {
-                    ch_cnt++;
-                }
-                
-            }
-
-           wordLength = cnt;
-           characterLength = ch_cnt;
-        }
-    }
-    countWords();
-    
-    
     const Convert_to_Uppercase = () => {
         //on getting a click event changing the text to UpperCase using text.toUpperCase function.
         setText(text.toUpperCase());
         // Correct way to set Text, setText is used for changing the text inside Brackets. 
         // it can be called only inside a function only.
-        props.showAlert("Text have been converted to uppercase")
+        if(text===""){
+            props.showAlert("Enter text to convert to UpperCase")
+        }
+        else{
+            props.showAlert("Text have been converted to UpperCase")
+        }
     }
     //receiving attributes as 'e' parameter here from textarea.
     const handleOnChange = (e) => {
         
         //using e.target.value to set the value in textarea  
         setText(e.target.value)
-        countWords();
+       
     }
     const Convert_to_lowercase = () => {
         setText(text.toLowerCase());
-        props.showAlert("Text have been converted to lowercase")
+        if(text===""){
+            props.showAlert("Enter text to convert to lowercase")
+        }
+        else{
+            props.showAlert("Text have been converted to lowercase")
+        }
         
     }
     
@@ -61,7 +46,15 @@ export default function TextForm(props) {
         const c = document.getElementById("mybox");
         c.select();
         navigator.clipboard.writeText(c.value);
-        props.showAlert("Text copied to clipboard")
+
+        if(text===""){
+        props.showAlert("No text to copy")
+
+        }
+        else{
+            props.showAlert("Text copied to clipboard")
+           
+        }
 
     }
     const Remove_Extra_Spaces = () => {
@@ -69,14 +62,22 @@ export default function TextForm(props) {
         let newText = text.split(/[ ]+/)
         // inserting only one space between the string
         setText(newText.join(" "))
-        props.showAlert("Extra spaces Removed")
+        if(text===""){
+            props.showAlert("Enter text with unwanted spaces")
+            }
+            else{
+                
+                props.showAlert("Extra Spaces are removed")
+
+            }
 
     }
     
     const reset = () => {
        
         setText("");
-        props.showAlert("Text Field Resetted")
+        
+        if(text!=="") props.showAlert("Text Field Resetted")
         
     }
     
@@ -94,11 +95,11 @@ export default function TextForm(props) {
                     <textarea className={`form-control`} id="mybox" value={text}  onChange={handleOnChange} rows="10"></textarea>
                 </div>
                 {/* //Using onClick to get the click event and calling handleOnClick function on firing of event                            */}
-                <button className={`btn ${props.theme} mx-5`} onClick={Convert_to_Uppercase}>Convert to Uppercase</button>
-                <button className={`btn ${props.theme} mx-5`} onClick={reset}>Reset</button>
-                <button className={`btn ${props.theme} mx-5`} onClick={Convert_to_lowercase}>Convert to Lowercase</button>
-                <button className={`btn ${props.theme} mx-5`} onClick={Copy}>Copy</button>
-                <button className={`btn ${props.theme} mx-5`} onClick={Remove_Extra_Spaces}>Remove Extra Spaces</button>
+                <button className={`btn ${props.theme} mx-5 my-2`} onClick={Convert_to_Uppercase}>Convert to Uppercase</button>
+                <button className={`btn ${props.theme} mx-5 my-2`} onClick={reset}>Reset</button>
+                <button className={`btn ${props.theme} mx-5 my-2`} onClick={Convert_to_lowercase}>Convert to Lowercase</button>
+                <button className={`btn ${props.theme} mx-5 my-2`} onClick={Copy}>Copy</button>
+                <button className={`btn ${props.theme} mx-5 my-2`} onClick={Remove_Extra_Spaces}>Remove Extra Spaces</button>
 
             </div>
 
@@ -106,8 +107,13 @@ export default function TextForm(props) {
 
             <div className={`wordinfo my-1`} >
                 <h2 className={`${props.theme==='th-white'?'dark':'whiteText'}`}>Summary</h2>
-                <p className={`${props.theme==='th-white'?'darkText':'whiteText'}`}>{`${wordLength} words and ${characterLength} characters`}</p>
-                <p className={`${props.theme==='th-white'?'darkText':'whiteText'}`}>{0.008 * text.split(" ").length} minutes to read</p>
+                                                                                    {/* here text.split is breaking the text from " " into substrings and then applying filter which means that only those substring true for element.length!==0 will be added in text then applyin length property to get length  */}
+                <p className={`${props.theme==='th-white'?'darkText':'whiteText'}`}>{`${text.split(/\s+/).filter((element)=>{
+                    return element.length!==0;
+                }).length} words and ${text.length} characters`}</p>
+                <p className={`${props.theme==='th-white'?'darkText':'whiteText'}`}>{0.008 * text.split(" ").filter((element)=>{
+                    return element.length!==0;
+                }).length} minutes to read</p>
                 <h2 className={`${props.theme==='th-white'?'darkText':'whiteText'}`}>Preview</h2>
                 <p className={`${props.theme==='th-white'?'darkText':'whiteText'}`}>{text.length === 0 ? "Enter text above to preview" : text}</p>
             </div>
